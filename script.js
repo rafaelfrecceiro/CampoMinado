@@ -11,13 +11,44 @@ document.onmousedown = () => {
     checkField(event)
 }
 
+function starGame(){
+    document.querySelector(".quantity-bombs").setAttribute("disabled", true)
+    restartGame()
+    sortingBoard()
+    makeBoard()
+}
+
+function restartGame(){
+    board = []
+    gameOverState = false
+
+    document.querySelector('.message').innerHTML = ""
+    document.querySelector('.message').classList.remove("error")
+
+    document.querySelector('.board').innerHTML = ""
+}
+
 function sortingBoard(){
+    let qtdBombs = document.querySelector(".quantity-bombs").value
+
     for(let l = 0; l < lines; l++) {
         let row = []
         for (let c = 0; c < columns; c++) {
-            Math.floor(Math.random(0,100)*100) >= 95 ? row.push("X") : row.push(" ")
+            row.push(" ")
         }
         board.push(row)
+    }
+
+    for(let rnd = 0; rnd < qtdBombs; rnd++){
+        let lin = Math.floor(Math.random(0,10)*10)
+        let col = Math.floor(Math.random(0,10)*10)
+        console.log(lin, col)
+
+        if(board[lin][col] != "X"){
+            board[lin][col] = "X"
+        }else{
+            rnd--
+        }
     }
 
     for(let lin = 0; lin < lines; lin++) {
@@ -81,7 +112,7 @@ function makeBoard(){
 }
 
 function checkField(event){
-    if(event.target.tagName == "INPUT" && !gameOverState) {
+    if(event.target.classList[0] == "option" && !gameOverState) {
         let l = event.target.getAttribute("row")
         let c = event.target.getAttribute("col")
 
@@ -107,7 +138,5 @@ function checkField(event){
 function gameOver(){
     document.querySelector('.message').innerHTML = "VOCÊ PERDEU!!!!"
     document.querySelector('.message').classList.add("error")
+    document.querySelector(".quantity-bombs").removeAttribute("disabled")
 }
-
-sortingBoard()
-makeBoard()
