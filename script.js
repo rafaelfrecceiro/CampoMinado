@@ -42,7 +42,6 @@ function sortingBoard(){
     for(let rnd = 0; rnd < qtdBombs; rnd++){
         let lin = Math.floor(Math.random(0,10)*10)
         let col = Math.floor(Math.random(0,10)*10)
-        console.log(lin, col)
 
         if(board[lin][col] != "X"){
             board[lin][col] = "X"
@@ -56,6 +55,8 @@ function sortingBoard(){
             checkBombsAdjacents(lin,col)
         }
     }
+
+    console.log("Board Finalizado", board)
 }
 
 function checkBombsAdjacents(l,c){
@@ -126,9 +127,15 @@ function checkField(event){
                 setTimeout(()=>{
                     gameOver()
                 },100)
-
             }
-            else event.target.value = board[l][c]
+            else{
+                event.target.value = board[l][c]
+
+                if(board[l][c] == " "){
+                    clearHorizontal(l, c)
+                    clearVertical(l, c)
+                }
+            }
         } else if (event.button == 2) {
             event.target.classList.add("findBomb")
         }
@@ -139,4 +146,107 @@ function gameOver(){
     document.querySelector('.message').innerHTML = "VOCÊ PERDEU!!!!"
     document.querySelector('.message').classList.add("error")
     document.querySelector(".quantity-bombs").removeAttribute("disabled")
+}
+
+function clearHorizontal(line, col){
+    line = parseInt(line)
+    col = parseInt(col)
+
+    //pega verticais pra cima
+    let before = []
+    for(let x = line-1; x >= 0; x--){
+        if(board[x][col] == " ") {
+            before.push([x, col])
+        }
+        else{
+            if(board[x][col] != "X"){
+                before.push([x, col])
+            }
+            break
+        }
+    }
+
+    //pega verticais pra baixo
+    let after = []
+    for(let y = line+1; y <= lines-1 ; y++){
+        if(board[y][col] == " "){
+            after.push([y, col])
+        }
+        else {
+            if(board[y][col] != "X"){
+                after.push([y, col])
+            }
+            break
+        }
+    }
+
+    let vertical = [...before, ...after]
+
+    for(let z = 0; z < vertical.length; z++){
+        if(board[vertical[z][0]][vertical[z][1]] == " " || board[vertical[z][0]][vertical[z][1]] != "X"){
+            let el = document.querySelectorAll(".option")
+            for(let m = 0; m < el.length; m++){
+                let row = document.querySelectorAll(".option")[m].getAttribute("row")
+                let col = document.querySelectorAll(".option")[m].getAttribute("col")
+
+                if(row == vertical[z][0] && col == vertical[z][1]){
+                    document.querySelectorAll(".option")[m].classList.add("removed")
+                    document.querySelectorAll(".option")[m].value = board[row][col]
+                    break
+                }
+            }
+        }
+    }
+}
+
+function clearVertical(line, col){
+    line = parseInt(line)
+    col = parseInt(col)
+
+    //pega horizontais pra esquerda
+    let before = []
+    for(let x = columns-1; x >= 0; x--){
+        if(board[line][x] == " ") {
+            before.push([line, x])
+        }
+        else{
+            if(board[line][x] != "X"){
+                before.push([line, x])
+            }
+            break
+        }
+    }
+
+    //pega horizontais pra direita
+    let after = []
+    for(let y = col+1; y <= columns-1 ; y++){
+        if(board[line][y] == " "){
+            after.push([line, y])
+        }
+        else {
+            if(board[line][y] != "X"){
+                after.push([line, y])
+            }
+            break
+        }
+    }
+
+    let horizontal = [...before, ...after]
+    console.log("horizontal", horizontal)
+
+    for(let z = 0; z < horizontal.length; z++){
+        if(board[horizontal[z][0]][horizontal[z][1]] == " " || board[horizontal[z][0]][horizontal[z][1]] != "X"){
+            let el = document.querySelectorAll(".option")
+            for(let m = 0; m < el.length; m++){
+                let row = document.querySelectorAll(".option")[m].getAttribute("row")
+                let col = document.querySelectorAll(".option")[m].getAttribute("col")
+
+                if(row == horizontal[z][0] && col == horizontal[z][1]){
+                    document.querySelectorAll(".option")[m].classList.add("removed")
+                    document.querySelectorAll(".option")[m].value = board[row][col]
+                    break
+                }
+            }
+        }
+    }
 }
