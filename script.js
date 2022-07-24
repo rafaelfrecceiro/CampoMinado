@@ -133,7 +133,7 @@ function checkField(event){
 
                 if(board[l][c] == " "){
                     clearHorizontal(l, c)
-                    clearVertical(l, c)
+                    //clearVertical(l, c)
                 }
             }
         } else if (event.button == 2) {
@@ -148,7 +148,7 @@ function gameOver(){
     document.querySelector(".quantity-bombs").removeAttribute("disabled")
 }
 
-function clearHorizontal(line, col){
+function clearVertical(line, col){
     line = parseInt(line)
     col = parseInt(col)
 
@@ -199,12 +199,13 @@ function clearHorizontal(line, col){
     }
 }
 
-function clearVertical(line, col){
+function clearHorizontal(line, col){
     line = parseInt(line)
     col = parseInt(col)
 
     //pega horizontais pra esquerda
     let before = []
+    debugger
     for(let x = columns-1; x >= 0; x--){
         if(board[line][x] == " ") {
             before.push([line, x])
@@ -231,10 +232,11 @@ function clearVertical(line, col){
         }
     }
 
+    console.log(line, col)
     let horizontal = [...before, ...after]
     console.log("horizontal", horizontal)
 
-    for(let z = 0; z < horizontal.length; z++){
+    /*for(let z = 0; z < horizontal.length; z++){
         if(board[horizontal[z][0]][horizontal[z][1]] == " " || board[horizontal[z][0]][horizontal[z][1]] != "X"){
             let el = document.querySelectorAll(".option")
             for(let m = 0; m < el.length; m++){
@@ -248,5 +250,5 @@ function clearVertical(line, col){
                 }
             }
         }
-    }
+    }*/
 }
